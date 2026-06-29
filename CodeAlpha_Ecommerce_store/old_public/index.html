@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS PRO | Ultimate Hardware & Lifestyle Ecosystem</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #060814; --bg-card: #0f132a; --brand-purple: #7c3aed;
+            --accent-blue: #2563eb; --neon-cyan: #38bdf8; --text-main: #f8fafc;
+            --text-muted: #94a3b8; --border: rgba(255, 255, 255, 0.08);
+            --glass: rgba(15, 19, 42, 0.75);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+        body { background-color: var(--bg-main); color: var(--text-main); overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--brand-purple); }
+
+        /* 1. Announcement Ticker */
+        .promo-ticker { background: linear-gradient(90deg, var(--brand-purple), var(--accent-blue)); color: white; text-align: center; padding: 10px 0; font-size: 13px; font-weight: 700; letter-spacing: 1px; position: relative; z-index: 1001; }
+        
+        /* 2. Glassmorphic Navigation */
+        nav { background: var(--glass); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 18px 5%; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 28px; font-weight: 800; color: white; text-decoration: none; letter-spacing: -1px; }
+        .logo span { color: var(--neon-cyan); }
+        .nav-links { display: flex; gap: 25px; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 14px; transition: 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: white; }
+        .search-box-container { flex: 1; max-width: 400px; margin: 0 30px; position: relative; }
+        .search-box-container input { width: 100%; padding: 11px 16px; background: rgba(3, 5, 15, 0.6); border: 1px solid var(--border); border-radius: 12px; color: white; outline: none; transition: 0.2s; }
+        .search-box-container input:focus { border-color: var(--brand-purple); box-shadow: 0 0 10px rgba(124, 58, 237, 0.3); }
+        .actions-cluster { display: flex; gap: 18px; }
+        .action-icon-btn { background: none; border: none; color: white; font-size: 22px; cursor: pointer; position: relative; transition: 0.2s; }
+        .action-icon-btn:hover { color: var(--neon-cyan); }
+        .counter-badge { position: absolute; top: -5px; right: -7px; background: #ef4444; color: white; font-size: 10px; font-weight: 800; border-radius: 50%; padding: 2px 6px; }
+
+        /* 3. Automatic Hero Slider */
+        .hero-slider-viewport { width: 100%; height: 500px; position: relative; overflow: hidden; background: #000; }
+        .hero-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1s ease-in-out; display: flex; align-items: center; padding: 0 8%; background-size: cover; background-position: center; }
+        .hero-slide.active { opacity: 1; z-index: 1; }
+        .hero-slide::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(6,8,20,0.9) 30%, rgba(6,8,20,0.3) 100%); }
+        .hero-content { position: relative; z-index: 2; max-width: 650px; }
+        .hero-tag { background: rgba(124, 58, 237, 0.2); border: 1px solid var(--brand-purple); color: var(--neon-cyan); padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-block; margin-bottom: 15px; }
+        .hero-content h1 { font-size: 48px; font-weight: 800; line-height: 1.1; margin-bottom: 15px; }
+        .hero-content p { color: var(--text-muted); font-size: 16px; margin-bottom: 25px; }
+        .hero-btn { background: linear-gradient(135deg, var(--accent-blue), var(--brand-purple)); color: white; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 700; display: inline-block; transition: 0.2s; }
+        .hero-btn:hover { transform: scale(1.03); box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4); }
+
+        /* 4. Value Propositions */
+        .props-bar { max-width: 1400px; margin: -40px auto 40px; padding: 0 2%; position: relative; z-index: 10; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .prop-card { background: #0f132a; border: 1px solid var(--border); border-radius: 16px; padding: 25px; display: flex; align-items: center; gap: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .prop-icon { width: 50px; height: 50px; background: rgba(37, 99, 235, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--neon-cyan); font-size: 22px; }
+        .prop-info h4 { font-size: 15px; font-weight: 700; }
+        .prop-info p { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
+
+        /* About Section Short */
+        .about-preview { max-width: 1400px; margin: 40px auto; padding: 0 2%; display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+        .about-text h2 { font-size: 36px; font-weight: 800; margin-bottom: 15px; }
+        .about-text p { color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; font-size: 15px; }
+
+        /* 5. Master Control Shelf */
+        .controls-shelf { max-width: 1400px; margin: 60px auto 20px; padding: 0 2%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 20px; gap: 20px; flex-wrap: wrap; }
+        .shelf-heading h2 { font-size: 28px; font-weight: 800; }
+        .shelf-heading p { color: var(--text-muted); font-size: 14px; margin-top: 2px; }
+        .category-pills-row { display: flex; gap: 10px; overflow-x: auto; max-width: 100%; padding-bottom: 5px; }
+        .pill-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted); padding: 10px 20px; border-radius: 25px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.2s; font-size: 13px; }
+        .pill-btn.active, .pill-btn:hover { background: var(--brand-purple); color: white; border-color: var(--brand-purple); }
+        .sort-dropdown { background: var(--bg-card); border: 1px solid var(--border); color: white; padding: 10px 15px; border-radius: 10px; outline: none; font-weight: 600; cursor: pointer; }
+
+        /* 6. 50 Unique Showrooms Grid */
+        .section-wrapper { max-width: 1400px; margin: 20px auto 80px; padding: 0 2%; }
+        .master-showroom-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
+        .modern-card-v2 { background: var(--bg-card); border-radius: 20px; overflow: hidden; border: 1px solid var(--border); display: flex; flex-direction: column; transition: transform 0.25s, border-color 0.25s; position: relative; }
+        .modern-card-v2:hover { transform: translateY(-5px); border-color: var(--brand-purple); }
+        .img-box-v2 { width: 100%; height: 220px; background-size: cover; background-position: center; position: relative; background-color: #12152b; }
+        .floating-stock-tag { position: absolute; bottom: 12px; left: 12px; background: rgba(6,8,20,0.85); padding: 5px 12px; border-radius: 8px; font-size: 11px; color: var(--neon-cyan); font-weight: 700; border: 1px solid var(--border); }
+        .like-btn { position: absolute; top: 12px; right: 12px; background: rgba(6,8,20,0.85); border: 1px solid var(--border); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; transition: 0.2s; z-index: 5; }
+        .like-btn:hover, .like-btn.liked { color: #ef4444; background: white; }
+        .details-content { padding: 20px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .tag-cat-v2 { color: var(--neon-cyan); font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+        .title-text-v2 { font-size: 15px; font-weight: 700; color: #f1f5f9; margin: 6px 0 12px; min-height: 44px; line-height: 1.4; }
+        .footer-row-v2 { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+        .price-text-v2 { font-size: 18px; font-weight: 800; color: white; }
+        .cart-btn-v2 { background: linear-gradient(135deg, var(--accent-blue), var(--brand-purple)); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .cart-btn-v2:hover { opacity: 0.9; transform: scale(1.02); }
+
+        /* 7. Sliding Side Panels (Drawers) */
+        .side-slider-drawer { position: fixed; right: -450px; top: 0; bottom: 0; width: 400px; background: #080b1c; z-index: 2000; padding: 30px; transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; border-left: 1px solid var(--border); box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
+        .side-slider-drawer.active { right: 0; }
+        .drawer-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+        .drawer-top h2 { font-size: 22px; font-weight: 800; }
+        .close-drawer { background: none; border: none; color: white; font-size: 28px; cursor: pointer; transition: 0.2s; }
+        .close-drawer:hover { color: #ef4444; }
+        .drawer-items-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        
+        .cart-item-row { display: flex; align-items: center; gap: 15px; background: var(--bg-card); padding: 12px; border-radius: 12px; border: 1px solid var(--border); }
+        .cart-item-img { width: 55px; height: 55px; background-size: cover; background-position: center; border-radius: 8px; }
+        .remove-item-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; margin-left: auto; }
+        .remove-item-btn:hover { color: #ef4444; }
+
+        /* 8. Rich Multi-Column Footer */
+        footer { background: #03040a; border-top: 1px solid var(--border); padding: 70px 5% 30px; margin-top: 80px; }
+        .footer-grid { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 5px; }
+        .footer-col h3 { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: white; }
+        .footer-col p { color: var(--text-muted); font-size: 14px; line-height: 1.6; }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 12px; }
+        .footer-col ul li a { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: 0.2s; }
+        .footer-col ul li a:hover { color: var(--neon-cyan); padding-left: 5px; }
+        .footer-bottom { max-width: 1400px; margin: 50px auto 0; padding-top: 25px; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted); font-size: 13px; }
+
+        /* 📱 100% EXPLICIT MOBILE MEDIA QUERIES (NO STYLE OR COLOR BLENDING OVERRIDES) */
+        @media (max-width: 768px) {
+            nav { padding: 12px 4%; flex-wrap: wrap; gap: 10px; }
+            .search-box-container { order: 3; max-width: 100%; margin: 5px 0 0; }
+            .hero-slider-viewport { height: 350px; }
+            .hero-content h1 { font-size: 28px; }
+            .hero-content p { font-size: 13px; }
+            .props-bar { grid-template-columns: repeat(2, 1fr); margin: 20px auto; padding: 0 4%; }
+            .prop-card { padding: 15px; gap: 10px; }
+            .about-preview { grid-template-columns: 1fr; gap: 20px; padding: 0 4%; }
+            .controls-shelf { padding: 0 4% 15px; }
+            .category-pills-row { padding-bottom: 10px; }
+            .master-showroom-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 0 2%; }
+            .img-box-v2 { height: 150px; }
+            .title-text-v2 { font-size: 13px; min-height: 36px; }
+            .side-slider-drawer { width: 100%; right: -100%; }
+            .footer-grid { grid-template-columns: 1fr; gap: 25px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="promo-ticker">⚡ FLASH PROTOCOL: USE CODE "NEXUS20" FOR 20% OFF NEXT GENERATION ECOSYSTEMS</div>
+
+    <nav>
+        <a href="#" class="logo">NEXUS<span>.</span>PRO</a>
+        <div class="nav-links">
+            <a href="#" class="active">Home</a>
+            <a href="#showroom">Showroom</a>
+            <a href="#about">About</a>
+        </div>
+        <div class="search-box-container">
+            <input type="text" id="mainSearchInput" onkeyup="realLiveSearch()" placeholder="Search 50 active nodes...">
+        </div>
+        <div class="actions-cluster">
+            <button class="action-icon-btn" onclick="toggleDrawer('wishlistMenu', true)"><i class="fa-regular fa-heart"></i><span class="counter-badge" id="wCount">0</span></button>
+            <button class="action-icon-btn" onclick="toggleDrawer('cartMenu', true)"><i class="fa-solid fa-basket-shopping"></i><span class="counter-badge" id="cCount">0</span></button>
+        </div>
+    </nav>
+
+    <div class="hero-slider-viewport">
+        <div class="hero-slide active" style="background-image: url('https://picsum.photos/id/26/1600/600');">
+            <div class="hero-content">
+                <span class="hero-tag">CYBER HARDWARE INTEL</span>
+                <h1>Forge Your Premium Digital Station</h1>
+                <p>Equip your workspace with curated top-tier monitors, mechanical decks, and computational engines running at peak operational performance.</p>
+                <a href="#showroom" class="hero-btn">Explore Live Grid</a>
+            </div>
+        </div>
+        <div class="hero-slide" style="background-image: url('https://picsum.photos/id/48/1600/600');">
+            <div class="hero-content">
+                <span class="hero-tag">AUDIO ARCHITECTURE</span>
+                <h1>Pure Soundwave Acoustics</h1>
+                <p>Immerse yourself into pure studio quality open-back setups and pro monitoring systems crafted for precision tracking and mixing clarity.</p>
+                <a href="#showroom" class="hero-btn">View Audio Labs</a>
+            </div>
+        </div>
+        <div class="hero-slide" style="background-image: url('https://picsum.photos/id/60/1600/600');">
+            <div class="hero-content">
+                <span class="hero-tag">CHRONO WEARABLES</span>
+                <h1>Engineered Heritage Luxury</h1>
+                <p>Track your physical matrices with deep tactical mechanics and pristine sapphire craftsmanship. Chronographs that withstand temporal bounds.</p>
+                <a href="#showroom" class="hero-btn">Discover Watches</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="props-bar">
+        <div class="prop-card">
+            <div class="prop-icon"><i class="fa-solid fa-truck-fast"></i></div>
+            <div class="prop-info"><h4>Instant Dispatch</h4><p>Worldwide air cargo tracking</p></div>
+        </div>
+        <div class="prop-card">
+            <div class="prop-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="prop-info"><h4>Secure Ledger</h4><p>256-bit encrypted gateways</p></div>
+        </div>
+        <div class="prop-card">
+            <div class="prop-icon"><i class="fa-solid fa-rotate"></i></div>
+            <div class="prop-info"><h4>Quantum Returns</h4><p>30 Days absolute satisfaction</p></div>
+        </div>
+        <div class="prop-card">
+            <div class="prop-icon"><i class="fa-solid fa-headset"></i></div>
+            <div class="prop-info"><h4>24/7 Node Ops</h4><p>Direct technical assistance</p></div>
+        </div>
+    </div>
+
+    <div class="about-preview" id="about">
+        <div class="about-text">
+            <h2>The Nexus Vision</h2>
+            <p>Founded at the intersection of lifestyle aesthetics and supreme machine processing power, NEXUS.PRO provides elite infrastructure gear for creators, engineers, and digital architects worldwide.</p>
+            <p>Every single node in our 50-device collection undergoes real-world operational stress tests before catalog deployment. Experience the absolute zenith of technical selection.</p>
+        </div>
+        <div style="background: url('https://picsum.photos/id/201/700/400') center/cover; height: 300px; border-radius: 20px; border: 1px solid var(--border);"></div>
+    </div>
+
+    <div class="controls-shelf" id="showroom">
+        <div class="shelf-heading">
+            <h2>Premium Showroom Grid</h2>
+            <p>50 Verified Standalone Digital Assets Loaded</p>
+        </div>
+        <div class="category-pills-row">
+            <button class="pill-btn active" onclick="filterCat('all', this)">All Nodes (50)</button>
+            <button class="pill-btn" onclick="filterCat('Laptops', this)">Laptops</button>
+            <button class="pill-btn" onclick="filterCat('Audio', this)">Audio Labs</button>
+            <button class="pill-btn" onclick="filterCat('Sneakers', this)">Footwear</button>
+            <button class="pill-btn" onclick="filterCat('Watches', this)">Chronographs</button>
+            <button class="pill-btn" onclick="filterCat('Phones', this)">Mobiles</button>
+            <button class="pill-btn" onclick="filterCat('Gaming', this)">Gaming Gear</button>
+        </div>
+        <div>
+            <select class="sort-dropdown" onchange="sortProducts(this.value)">
+                <option value="default">Default Sort</option>
+                <option value="low">Price: Low to High</option>
+                <option value="high">Price: High to Low</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="section-wrapper">
+        <div class="master-showroom-grid" id="masterGridDestination"></div>
+    </div>
+
+    <div class="side-slider-drawer" id="cartMenu">
+        <div class="drawer-top">
+            <h2>Your Cargo Cart</h2>
+            <button class="close-drawer" onclick="toggleDrawer('cartMenu', false)">&times;</button>
+        </div>
+        <div class="drawer-items-list" id="cartContainer"></div>
+        <div style="border-top:1px solid var(--border); padding-top:20px; margin-top:20px;">
+            <div style="display:flex; justify-content:space-between; font-weight:800; margin-bottom:15px; font-size:18px;">
+                <span>Total:</span><span id="cartTotalSum" style="color: var(--neon-cyan);">$0.00</span>
+            </div>
+            <button style="width:100%; background:linear-gradient(135deg, var(--accent-blue), var(--brand-purple)); border:none; padding:14px; border-radius:10px; color:white; font-weight:700; cursor:pointer;" onclick="alert('System secure terminal connected. Order Dispatched!')">Secure Checkout</button>
+        </div>
+    </div>
+
+    <div class="side-slider-drawer" id="wishlistMenu">
+        <div class="drawer-top">
+            <h2>Your Vault Wishlist</h2>
+            <button class="close-drawer" onclick="toggleDrawer('wishlistMenu', false)">&times;</button>
+        </div>
+        <div class="drawer-items-list" id="wishlistContainer"></div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <a href="#" class="logo" style="display:inline-block; margin-bottom:15px;">NEXUS<span>.</span>PRO</a>
+                <p>The premium hardware and lifestyle procurement system supplying raw dynamic assets globally. Experience decentralized commercial flow.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Navigation</h3>
+                <ul>
+                    <li><a href="#">Home Station</a></li>
+                    <li><a href="#showroom">Showroom Catalog</a></li>
+                    <li><a href="#about">About Nexus Protocol</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Ecosystem Nodes</h3>
+                <ul>
+                    <li><a href="#showroom">Computation Packs</a></li>
+                    <li><a href="#showroom">Acoustic Audio</a></li>
+                    <li><a href="#showroom">Tactical Timepieces</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>System Support</h3>
+                <ul>
+                    <li><a href="#">Central Mainframe</a></li>
+                    <li><a href="#">Security Core</a></li>
+                    <li><a href="#">Node Dispatch Tracker</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 NEXUS Ecosystem Architecture. 50 Zero-Repeat Pure Image Protocols Locked.</p>
+        </div>
+    </footer>
+
+    <script>
+        const baseProducts = [
+            { id: 1, cat: 'Laptops', price: 1299, img: 'https://loremflickr.com/500/400/laptop,macbook?lock=1', title: 'MacBook Pro Stealth M3' },
+            { id: 2, cat: 'Laptops', price: 1899, img: 'https://loremflickr.com/500/400/laptop,gaming?lock=2', title: 'Razer Blade 16 Advanced' },
+            { id: 3, cat: 'Laptops', price: 850, img: 'https://loremflickr.com/500/400/notebook,computer?lock=3', title: 'HP Spectre x360 Touch' },
+            { id: 4, cat: 'Laptops', price: 1450, img: 'https://loremflickr.com/500/400/laptop,dell?lock=4', title: 'Dell XPS 13 OLED Horizon' },
+            { id: 5, cat: 'Laptops', price: 2190, img: 'https://loremflickr.com/500/400/lenovo,thinkpad?lock=5', title: 'Lenovo ThinkPad X1 Nano' },
+            { id: 6, cat: 'Laptops', price: 1050, img: 'https://loremflickr.com/500/400/asus,zenbook?lock=6', title: 'ASUS Zenbook Duo Vision' },
+            { id: 7, cat: 'Laptops', price: 1650, img: 'https://loremflickr.com/500/400/laptop,predator?lock=7', title: 'Acer Predator Helios Frame' },
+            { id: 8, cat: 'Laptops', price: 720, img: 'https://loremflickr.com/500/400/surface,laptop?lock=8', title: 'Microsoft Surface Book Neo' },
+            { id: 9, cat: 'Audio', price: 299, img: 'https://loremflickr.com/500/400/headphones,sony?lock=9', title: 'Sony WH-1000XM5 Studio' },
+            { id: 10, cat: 'Audio', price: 350, img: 'https://loremflickr.com/500/400/headphones,marshall?lock=10', title: 'Marshall Monitor II Heritage' },
+            { id: 11, cat: 'Audio', price: 150, img: 'https://loremflickr.com/500/400/earbuds?lock=11', title: 'JBL Tour Pro Active Engine' },
+            { id: 12, cat: 'Audio', price: 540, img: 'https://loremflickr.com/500/400/soundbar,speaker?lock=12', title: 'Bose Smart Cinema Deck' },
+            { id: 13, cat: 'Audio', price: 199, img: 'https://loremflickr.com/500/400/audiotechnica?lock=13', title: 'Audio-Technica Pro Console' },
+            { id: 14, cat: 'Audio', price: 89, img: 'https://loremflickr.com/500/400/speaker,bluetooth?lock=14', title: 'Anker Soundcore Wave' },
+            { id: 15, cat: 'Audio', price: 220, img: 'https://loremflickr.com/500/400/sennheiser?lock=15', title: 'Sennheiser Open-Back Unit' },
+            { id: 16, cat: 'Audio', price: 410, img: 'https://loremflickr.com/500/400/microphone,shure?lock=16', title: 'Shure SM7B Podcaster Core' },
+            { id: 17, cat: 'Audio', price: 130, img: 'https://loremflickr.com/500/400/airpods?lock=17', title: 'Apple AirPods Pro Luxury' },
+            { id: 18, cat: 'Sneakers', price: 180, img: 'https://loremflickr.com/500/400/sneakers,nike?lock=18', title: 'Nike Air Max Crimson Strike' },
+            { id: 19, cat: 'Sneakers', price: 210, img: 'https://loremflickr.com/500/400/shoes,nike?lock=19', title: 'Nike Dunk Low Horizon' },
+            { id: 20, cat: 'Sneakers', price: 165, img: 'https://loremflickr.com/500/400/sneakers,adidas?lock=20', title: 'Adidas Yeezy Boost Prime' },
+            { id: 21, cat: 'Sneakers', price: 135, img: 'https://loremflickr.com/500/400/jordan,sneakers?lock=21', title: 'Air Jordan 1 Hyper Retro' },
+            { id: 22, cat: 'Sneakers', price: 260, img: 'https://loremflickr.com/500/400/newbalance,sneakers?lock=22', title: 'New Balance 990v6 Suede' },
+            { id: 23, cat: 'Sneakers', price: 195, img: 'https://loremflickr.com/500/400/puma,shoes?lock=23', title: 'Puma RS-X Geometric' },
+            { id: 24, cat: 'Sneakers', price: 175, img: 'https://loremflickr.com/500/400/asics,shoes?lock=24', title: 'Asics Gel-Kayano Core' },
+            { id: 25, cat: 'Sneakers', price: 150, img: 'https://loremflickr.com/500/400/vans,shoes?lock=25', title: 'Vans Old Skool Vault' },
+            { id: 26, cat: 'Watches', price: 450, img: 'https://loremflickr.com/500/400/watch,seiko?lock=26', title: 'Seiko Prospex Speedmaster' },
+            { id: 27, cat: 'Watches', price: 320, img: 'https://loremflickr.com/500/400/smartwatch?lock=27', title: 'Samsung Galaxy Chrono' },
+            { id: 28, cat: 'Watches', price: 680, img: 'https://loremflickr.com/500/400/watch,tissot?lock=28', title: 'Tissot PRX Heritage Chrono' },
+            { id: 29, cat: 'Watches', price: 280, img: 'https://loremflickr.com/500/400/watch,citizen?lock=29', title: 'Citizen Eco-Drive Vector' },
+            { id: 30, cat: 'Watches', price: 890, img: 'https://loremflickr.com/500/400/watch,tagheuer?lock=30', title: 'Tag Heuer Formula One' },
+            { id: 31, cat: 'Watches', price: 1100, img: 'https://loremflickr.com/500/400/watch,omega?lock=31', title: 'Omega Speedmaster Alpha' },
+            { id: 32, cat: 'Watches', price: 340, img: 'https://loremflickr.com/500/400/applewatch?lock=32', title: 'Apple Watch Ultra Matrix' },
+            { id: 33, cat: 'Watches', price: 210, img: 'https://loremflickr.com/500/400/gshock,watch?lock=33', title: 'Casio G-Shock Tactical' },
+            { id: 34, cat: 'Phones', price: 999, img: 'https://loremflickr.com/500/400/iphone?lock=34', title: 'iPhone 15 Pro Max' },
+            { id: 35, cat: 'Phones', price: 1199, img: 'https://loremflickr.com/500/400/samsung,phone?lock=35', title: 'Samsung Galaxy S24 Raw' },
+            { id: 36, cat: 'Phones', price: 749, img: 'https://loremflickr.com/500/400/pixel,phone?lock=36', title: 'Google Pixel 8 Quantum' },
+            { id: 37, cat: 'Phones', price: 590, img: 'https://loremflickr.com/500/400/oneplus,phone?lock=37', title: 'OnePlus 12 Fluid Flow' },
+            { id: 38, cat: 'Phones', price: 820, img: 'https://loremflickr.com/500/400/xiaomi,phone?lock=38', title: 'Xiaomi 14 Leica Optics' },
+            { id: 39, cat: 'Phones', price: 499, img: 'https://loremflickr.com/500/400/nothingphone?lock=39', title: 'Nothing Phone 2 Glyph' },
+            { id: 40, cat: 'Phones', price: 650, img: 'https://loremflickr.com/500/400/sony,phone?lock=40', title: 'Sony Xperia Slate Base' },
+            { id: 41, cat: 'Phones', price: 390, img: 'https://loremflickr.com/500/400/motorola,phone?lock=41', title: 'Motorola Razr Foldable' },
+            { id: 42, cat: 'Gaming', price: 120, img: 'https://loremflickr.com/500/400/keyboard,mechanical?lock=42', title: 'Keychron Mechanical Deck' },
+            { id: 43, cat: 'Gaming', price: 70, img: 'https://loremflickr.com/500/400/controller,xbox?lock=43', title: 'Xbox Elite Trigger Pro' },
+            { id: 44, cat: 'Gaming', price: 95, img: 'https://loremflickr.com/500/400/mouse,gaming?lock=44', title: 'Logitech G Superlight' },
+            { id: 45, cat: 'Gaming', price: 420, img: 'https://loremflickr.com/500/400/gamingpc,computer?lock=45', title: 'Mahogany Gaming Rig' },
+            { id: 46, cat: 'Gaming', price: 160, img: 'https://loremflickr.com/500/400/keyboard,gaming?lock=46', title: 'SteelSeries Tournament TKL' },
+            { id: 47, cat: 'Gaming', price: 399, img: 'https://loremflickr.com/500/400/playstation5?lock=47', title: 'PlayStation 5 Console' },
+            { id: 48, cat: 'Gaming', price: 140, img: 'https://loremflickr.com/500/400/nintendo,switch?lock=48', title: 'Nintendo Switch Core' },
+            { id: 49, cat: 'Gaming', price: 199, img: 'https://loremflickr.com/500/400/corsair?lock=49', title: 'Corsair RGB Performance' },
+            { id: 50, cat: 'Gaming', price: 290, img: 'https://loremflickr.com/500/400/monitor,gaming?lock=50', title: 'ASUS ROG Swift Monitor' }
+        ];
+
+        let products = [...baseProducts];
+        let cart = [];
+        let wishlist = [];
+        let activeCategory = 'all';
+
+        function handleImageError(element) {
+            element.style.backgroundImage = "url('https://picsum.photos/500/400?random=" + Math.random() + "')";
+        }
+
+        let slideIndex = 0;
+        const slides = document.getElementsByClassName('hero-slide');
+        setInterval(() => {
+            if(slides.length === 0) return;
+            slides[slideIndex].classList.remove('active');
+            slideIndex = (slideIndex + 1) % slides.length;
+            slides[slideIndex].classList.add('active');
+        }, 4000);
+
+        function renderShowroom() {
+            const grid = document.getElementById('masterGridDestination');
+            if(!grid) return;
+            grid.innerHTML = '';
+            
+            products.forEach(item => {
+                if (activeCategory !== 'all' && item.cat !== activeCategory) return;
+                
+                const isWished = wishlist.some(x => x.id === item.id) ? 'liked' : '';
+                const heartIcon = wishlist.some(x => x.id === item.id) ? 'fa-solid' : 'fa-regular';
+
+                grid.innerHTML += `
+                <div class="modern-card-v2" data-title="${item.title.toLowerCase()}">
+                    <button class="like-btn ${isWished}" onclick="toggleWish(${item.id}, this)">
+                        <i class="${heartIcon} fa-heart"></i>
+                    </button>
+                    <div class="img-box-v2" style="background-image: url('${item.img}');" onerror="handleImageError(this)">
+                        <span class="floating-stock-tag">#NODE-${item.id}</span>
+                    </div>
+                    <div class="details-content">
+                        <div>
+                            <span class="tag-cat-v2">${item.cat}</span>
+                            <h3 class="title-text-v2">${item.title}</h3>
+                        </div>
+                        <div class="footer-row-v2">
+                            <span class="price-text-v2">$${item.price}</span>
+                            <button class="cart-btn-v2" onclick="addToCart(${item.id})">Add Pack</button>
+                        </div>
+                    </div>
+                </div>`;
+            });
+        }
+
+        function toggleDrawer(id, open) {
+            document.getElementById(id).classList.toggle('active', open);
+        }
+
+        function filterCat(cat, btn) {
+            document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeCategory = cat;
+            renderShowroom();
+        }
+
+        function sortProducts(criteria) {
+            if (criteria === 'low') {
+                products.sort((a, b) => a.price - b.price);
+            } else if (criteria === 'high') {
+                products.sort((a, b) => b.price - a.price);
+            } else {
+                products = [...baseProducts];
+            }
+            renderShowroom();
+        }
+
+        function realLiveSearch() {
+            const s = document.getElementById('mainSearchInput').value.toLowerCase();
+            for(let card of document.getElementsByClassName('modern-card-v2')) {
+                card.style.display = card.getAttribute('data-title').includes(s) ? 'flex' : 'none';
+            }
+        }
+
+        function addToCart(id) {
+            cart.push(baseProducts.find(p => p.id === id));
+            updateCartUI();
+            toggleDrawer('cartMenu', true);
+        }
+
+        function removeCartItem(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            document.getElementById('cCount').textContent = cart.length;
+            const container = document.getElementById('cartContainer');
+            container.innerHTML = '';
+            let total = 0;
+            
+            cart.forEach((item, index) => {
+                total += item.price;
+                container.innerHTML += `
+                <div class="cart-item-row">
+                    <div class="cart-item-img" style="background-image: url('${item.img}')"></div>
+                    <div style="flex:1;">
+                        <h5 style="font-size:13px; font-weight:700;">${item.title}</h5>
+                        <span style="color:var(--neon-cyan); font-size:13px; font-weight:600;">$${item.price}</span>
+                    </div>
+                    <button class="remove-item-btn" onclick="removeCartItem(${index})"><i class="fa-solid fa-trash-can"></i></button>
+                </div>`;
+            });
+            document.getElementById('cartTotalSum').textContent = '$' + total.toFixed(2);
+        }
+
+        function toggleWish(id, btn) {
+            const index = wishlist.findIndex(x => x.id === id);
+            if(index > -1) {
+                wishlist.splice(index, 1);
+            } else {
+                wishlist.push(baseProducts.find(p => p.id === id));
+            }
+            document.getElementById('wCount').textContent = wishlist.length;
+            
+            const container = document.getElementById('wishlistContainer');
+            container.innerHTML = '';
+            wishlist.forEach(item => {
+                container.innerHTML += `
+                <div class="cart-item-row">
+                    <div class="cart-item-img" style="background-image: url('${item.img}')"></div>
+                    <div style="flex:1;">
+                        <h5 style="font-size:13px; font-weight:700;">${item.title}</h5>
+                        <span style="color:var(--neon-cyan); font-size:13px; font-weight:600;">$${item.price}</span>
+                    </div>
+                </div>`;
+            });
+            renderShowroom();
+        }
+
+        renderShowroom();
+    </script>
+</body>
+</html>
